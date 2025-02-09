@@ -5,7 +5,7 @@
     import java.util.InputMismatchException;
     import java.util.Scanner;
 
-    public class sistemPengelolaanParkir {
+    public class sistemPengelolaanParkir{
         static Scanner scan = new Scanner (System.in);
         static String[][] userData = new String[10][2];
         static int userCount = 1;
@@ -270,7 +270,7 @@
                     kendaraanKeluar.add(K);
                     break;
                 }
-            } if (!ditemukan) {
+            } if (ditemukan) {
                 loading();
                 System.out.println("Kendaraan dengan plat nomor " + platNomor + " tidak ditemukan.");
             }
