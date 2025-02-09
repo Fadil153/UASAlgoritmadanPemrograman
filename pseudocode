@@ -1,0 +1,198 @@
+DECLARE Scanner scan
+DECLARE String[][] userData (10,2)
+DECLARE Integer userCount = 1
+DECLARE ArrayList kendaraanMasuk
+DECLARE ArrayList kendaraanKeluar
+DECLARE DateTimeFormatter format = "dd-MM-yyyy HH:mm:ss"
+
+BEGIN  
+    SET defaultUser = "frizki"
+    SET defaultPass = "21345"
+    userData[0][0] = defaultUser
+    userData[0][1] = defaultPass
+
+    Tambahkan beberapa data kendaraan ke kendaraanMasuk dan kendaraanKeluar
+
+    WHILE (true) DO  
+        Tampilkan "Sistem Pengelolaan Parkir"  
+        Tampilkan "[1] YA | [2] TIDAK"  
+        INPUT pilihanMulai  
+
+        IF pilihanMulai == "YA" OR pilihanMulai == "1" THEN  
+            Panggil loading()  
+            WHILE (true) DO  
+                Tampilkan "Silakan pilih opsi:"  
+                Tampilkan "[1] MASUK | [2] DAFTAR"  
+                INPUT pilihanLogin  
+
+                IF pilihanLogin == "MASUK" OR pilihanLogin == "1" THEN  
+                    Panggil loading()  
+                    IF masuk() == TRUE THEN  
+                        Tampilkan "Berhasil Masuk!"  
+                        EXIT dari loop login  
+                    ELSE  
+                        Tampilkan "Gagal masuk! Silakan daftar terlebih dahulu."  
+                    ENDIF  
+                ELSE IF pilihanLogin == "DAFTAR" OR pilihanLogin == "2" THEN  
+                    Panggil loading()  
+                    IF daftar() == FALSE THEN  
+                        Tampilkan "Pendaftaran berhasil! Silakan masuk."  
+                    ELSE  
+                        Tampilkan "Silahkan kembali."  
+                    ENDIF  
+                ELSE  
+                    Tampilkan "Input tidak valid!"  
+                ENDIF  
+            ENDWHILE  
+        ELSE IF pilihanMulai == "TIDAK" OR pilihanMulai == "2" THEN  
+            Panggil loading()  
+            Tampilkan "Program tidak dimulai. Terima kasih!"  
+            EXIT program  
+        ELSE  
+            Tampilkan "Input tidak valid! Silakan coba lagi."  
+        ENDIF  
+    ENDWHILE  
+
+    WHILE (true) DO  
+        Tampilkan "Menu Utama Parkir"  
+        Tampilkan "[1] KENDARAAN MASUK"
+        Tampilkan "[2] KENDARAAN KELUAR"
+        Tampilkan "[3] DAFTAR KENDARAAN MASUK"
+        Tampilkan "[4] DAFTAR KENDARAAN KELUAR"
+        Tampilkan "[5] URUTKAN KENDARAAN"
+        Tampilkan "[6] CARI KENDARAAN"
+        Tampilkan "[7] KELUAR DARI PROGRAM"
+        INPUT pilihanMenu  
+
+        Panggil loading()  
+
+        SWITCH (pilihanMenu)  
+            CASE 1: Panggil kendaraanMasuk()  
+            CASE 2: Panggil kendaraanKeluar()  
+            CASE 3: Panggil daftarKendaraanMasuk()  
+            CASE 4: Panggil daftarKendaraanKeluar()  
+            CASE 5: Panggil urutkanKendaraan()  
+            CASE 6: Panggil cariKendaraan()  
+            CASE 7:  
+                Tampilkan "Keluar dari program. Terima kasih!"  
+                EXIT program  
+            DEFAULT:  
+                Tampilkan "Pilihan tidak valid!"  
+        END SWITCH  
+    ENDWHILE  
+END  
+
+FUNCTION masuk() RETURNS Boolean  
+    INPUT nama  
+    INPUT password  
+
+    FOR i = 0 TO userCount - 1 DO  
+        IF userData[i][0] == nama AND userData[i][1] == password THEN  
+            RETURN TRUE  
+        ENDIF  
+    ENDFOR  
+    RETURN FALSE  
+END FUNCTION  
+
+FUNCTION daftar() RETURNS Boolean  
+    IF userCount >= panjang userData THEN  
+        Tampilkan "Pendaftaran penuh!"  
+        RETURN TRUE  
+    ENDIF  
+
+    INPUT nama  
+    FOR i = 0 TO userCount - 1 DO  
+        IF userData[i][0] == nama THEN  
+            Tampilkan "Nama sudah ada!"  
+            RETURN TRUE  
+        ENDIF  
+    ENDFOR  
+
+    INPUT password  
+    userData[userCount][0] = nama  
+    userData[userCount][1] = password  
+    userCount = userCount + 1  
+
+    RETURN FALSE  
+END FUNCTION  
+
+FUNCTION kendaraanMasuk()  
+    INPUT platNomor  
+    waktuMasuk = Waktu Sekarang  
+    Tambahkan Kendaraan(platNomor, waktuMasuk) ke kendaraanMasuk  
+    Tampilkan "Kendaraan masuk pada waktu " + waktuMasuk  
+END FUNCTION  
+
+FUNCTION kendaraanKeluar()  
+    INPUT platNomor  
+    SET ditemukan = FALSE  
+
+    FOR EACH kendaraan IN kendaraanMasuk DO  
+        IF kendaraan.platNomor == platNomor THEN  
+            kendaraan.waktuKeluar = Waktu Sekarang  
+            Tampilkan "Kendaraan keluar pada waktu " + kendaraan.waktuKeluar  
+            Tampilkan "Durasi parkir: " + kendaraan.durasiParkir()  
+            Tampilkan "Harga parkir: " + kendaraan.hargaParkir()  
+            Hapus kendaraan dari kendaraanMasuk  
+            Tambahkan kendaraan ke kendaraanKeluar  
+            SET ditemukan = TRUE  
+            BREAK  
+        ENDIF  
+    ENDFOR  
+
+    IF ditemukan == FALSE THEN  
+        Tampilkan "Kendaraan tidak ditemukan!"  
+    ENDIF  
+END FUNCTION  
+
+FUNCTION daftarKendaraanMasuk()  
+    IF kendaraanMasuk kosong THEN  
+        Tampilkan "Tidak ada kendaraan yang parkir."  
+    ELSE  
+        FOR EACH kendaraan IN kendaraanMasuk DO  
+            Tampilkan kendaraan.platNomor + " | Waktu Masuk: " + kendaraan.waktuMasuk  
+        ENDFOR  
+    ENDIF  
+END FUNCTION  
+
+FUNCTION daftarKendaraanKeluar()  
+    IF kendaraanKeluar kosong THEN  
+        Tampilkan "Tidak ada kendaraan yang keluar."  
+    ELSE  
+        FOR EACH kendaraan IN kendaraanKeluar DO  
+            Tampilkan kendaraan.platNomor + " | Waktu Keluar: " + kendaraan.waktuKeluar  
+        ENDFOR  
+    ENDIF  
+END FUNCTION  
+
+FUNCTION urutkanKendaraan()  
+    INPUT pilihanUrut  
+
+    IF pilihanUrut == "1" THEN  
+        Urutkan kendaraanMasuk berdasarkan waktuMasuk (Bubble Sort)  
+        Tampilkan daftarKendaraanMasuk()  
+    ELSE IF pilihanUrut == "2" THEN  
+        Urutkan kendaraanKeluar berdasarkan waktuKeluar (Bubble Sort)  
+        Tampilkan daftarKendaraanKeluar()  
+    ELSE  
+        Tampilkan "Pilihan tidak valid!"  
+    ENDIF  
+END FUNCTION  
+
+FUNCTION cariKendaraan()  
+    INPUT pilihanCari  
+    INPUT platNomor  
+    SET ditemukan = FALSE  
+
+    IF pilihanCari == "1" THEN  
+        Cari kendaraan di kendaraanMasuk  
+    ELSE IF pilihanCari == "2" THEN  
+        Cari kendaraan di kendaraanKeluar  
+    ELSE  
+        Tampilkan "Input tidak valid!"  
+    ENDIF  
+
+    IF ditemukan == FALSE THEN  
+        Tampilkan "Kendaraan tidak ditemukan."  
+    ENDIF  
+END FUNCTION  
