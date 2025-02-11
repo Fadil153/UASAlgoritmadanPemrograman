@@ -1,3 +1,7 @@
+Muhammad Frizki Fadillah
+24552011107
+TIF RM 24 A
+
 # UASAlgoritmadanPemrograman
 
 Flowchart sebelum coding dibuat
